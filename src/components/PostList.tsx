@@ -13,14 +13,13 @@ export interface Post {
 }
 
 const fetchPosts = async (): Promise<Post[]> => {
-    // Check if supabase client is available
     if (!supabase) {
-        console.warn('Supabase client not available, using mock data');
+        console.warn('Supabase client not available');
         return [];
     }
 
     const { data, error } = await supabase
-        .from('posts')
+        .from('Posts')
         .select('*')
         .order('created_at', { ascending: false });
 
@@ -38,8 +37,6 @@ const PostList = () => {
         queryFn: fetchPosts
     });
 
-
-
     if (isLoading) {
         return <div className="text-center py-8 text-gray-400">Loading posts...</div>;
     }
@@ -47,7 +44,7 @@ const PostList = () => {
     if (error) {
         return (
             <div className="text-center py-8">
-                <div className="text-red-400 font-mono mb-2">❌ Error loading posts</div>
+                <div className="text-red-400 font-mono mb-2">Error loading posts</div>
                 <div className="text-gray-500 text-sm">{error.message}</div>
             </div>
         );
@@ -57,8 +54,8 @@ const PostList = () => {
         return (
             <div className="text-center py-12">
                 <div className="text-gray-400 font-mono border border-dashed border-cyan-900/30 rounded-lg bg-slate-900/20 p-8">
-                    <p className="text-xl mb-2">📭 No posts found</p>
-                    <p className="text-sm text-gray-500">Your database is empty or Posts table doesn't exist</p>
+                    <p className="text-xl mb-2">No posts yet</p>
+                    <p className="text-sm text-gray-500">Be the first to create a post!</p>
                 </div>
             </div>
         );
@@ -70,7 +67,7 @@ const PostList = () => {
                 <PostItem key={post.id} post={post} />
             ))}
         </div>
-    )
+    );
 }
 
-export default PostList
+export default PostList;
